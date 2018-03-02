@@ -31,9 +31,9 @@ fun vmProduct (nil,nil) = nil (*takes a row vector and multiplies with a matrix 
 | vmProduct (nil,_) = nil
 | vmProduct ((x::xs),(y::ys)) =
 	let
-		val cur = svProduct(x,y)::vmProduct(xs,ys)
+		val cur = svProduct(x,y)::vmProduct(xs,ys) (*can't call helper here either*)
 	in
-		cur
+		cur (*using helper cur doesn't work here*)
 	end;
 
 fun matrixProduct (nil,nil) = nil (*takes two matrices and multiplies them, working aside from vm's problems*)
@@ -41,9 +41,9 @@ fun matrixProduct (nil,nil) = nil (*takes two matrices and multiplies them, work
 | matrixProduct (nil,_) = nil
 | matrixProduct (x::xs,y::ys) = 
 	let
-		val cur = (vmProduct(x,y::ys))::matrixProduct(xs,y::ys)
+		val cur = (helper(vmProduct(x,y::ys)))::matrixProduct(xs,y::ys)
 	in
-		cur (*fix vmProduct to fix this *)
+		cur (*works when helper is called on vmProduct here...*)
 	end;
 
 fun helper (nil) = nil (*helper of vm, independent for testing purposes*)
