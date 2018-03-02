@@ -26,19 +26,14 @@ fun svProduct (x,nil) = nil (*multiplies row vector by x*)
 | svProduct (x,y::ys) =
 	map (fn (z) => x*z) (y::ys);
 
-fun vmProduct (nil,nil) = (nil: int list) (*takes a row vector and multiplies with a matrix to produce a row vector of column length*)
-| vmProduct (_,nil) = (nil: int list)
-| vmProduct (nil,_) = (nil: int list)
-| vmProduct ([x],[[y]]) = svProduct(x,[y])
-| vmProduct (((x::xs): int list),((y::yn::ys): int list list)) =
+fun vmProduct (nil,nil) = nil (*takes a row vector and multiplies with a matrix to produce a row vector of column length*)
+| vmProduct (_,nil) = nil
+| vmProduct (nil,_) = nil
+| vmProduct ((x::xs),(y::ys)) =
 	let
-		val cur = svProduct(x,y)::vmProduct(xs,yn::ys) (*operator operand type mismatch, vmProduct is not registering as a int list*)
-		fun helper (nil) = nil (*adds the values of vmProduct to produce a final row vector*)
-		| helper ([x]: int list list) = (x: int list)
-		| helper ((x::xn::nil): int list list) = (vectorAdd(x,xn): int list)
-		| helper ((x::xn::xs): int list list) = helper(vectorAdd(x,xn)::xs)
+		val cur = svProduct(x,y)::vmProduct(xs,ys)
 	in
-		(helper(cur): int list) (* helper works independently, but recursive calls of vm are broken*)
+		cur
 	end;
 
 fun matrixProduct (nil,nil) = nil (*takes two matrices and multiplies them, working aside from vm's problems*)
